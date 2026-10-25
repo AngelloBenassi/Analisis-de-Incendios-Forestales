@@ -1,0 +1,22 @@
+﻿region,zona,frecuencia_incendios_actual,frecuencia_incendios_proyectada_2025_2026,variacion_frecuencia_pct,superficie_afectada_ha_actual,superficie_afectada_ha_proyectada_2025_2026,variacion_superficie_pct,nivel_riesgo_proyectado
+Arica y Parinacota,Norte Grande,15,16,6.67,18.2,20.0,9.89,Bajo
+Tarapacá,Norte Grande,10,11,10.0,12.0,13.5,12.5,Bajo
+Antofagasta,Norte Grande,7,8,14.29,4.5,5.0,11.11,Bajo
+Atacama,Norte Chico,28,30,7.14,60.5,68.0,12.4,Medio-Bajo
+Coquimbo,Norte Chico,125,135,8.0,520.0,580.0,11.54,Medio
+Valparaíso,Central,920,980,6.52,15800.0,17200.0,8.86,Crítico
+Metropolitana,Central,680,720,5.88,9400.0,10100.0,7.45,Alto
+O'Higgins,Central,590,630,6.78,13500.0,14800.0,9.63,Alto
+Maule,Centro-Sur,1050,1120,6.67,31000.0,34500.0,11.29,Muy Alto
+Ñuble,Centro-Sur,810,870,7.41,27800.0,31200.0,12.23,Muy Alto
+Biobío,Centro-Sur,1920,2050,6.77,82000.0,95000.0,15.85,Crítico
+La Araucanía,Sur,1310,1400,6.87,64000.0,72000.0,12.5,Crítico
+Los Ríos,Sur,210,230,9.52,2800.0,3500.0,25.0,Medio
+Los Lagos,Sur,240,260,8.33,1500.0,1900.0,26.67,Medio
+Aysén,Austral,30,32,6.67,420.0,480.0,14.29,Bajo
+Magallanes,Austral,18,20,11.11,95.0,130.0,36.84,Bajo
+import pandas as pd
+
+df = pd.read_csv("estadisticas_incendios_por_region.csv")
+
+print(df.head())
