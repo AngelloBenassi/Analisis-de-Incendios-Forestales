@@ -1,22 +1,41 @@
-import os
-from src.carga import cargar_estadisticas, cargar_comparacion, cargar_proyeccion, cargar_historico
-from src.validaciones import reporte_calidad
-from src.limpieza import limpiar_proyeccion, limpiar_historico
+"""Ejecuta todo el proceso del avance 3: python main.py (desde la raíz)."""
+from pathlib import Path
 
-est = cargar_estadisticas()
-comp = cargar_comparacion()
-proy = cargar_proyeccion()
-hist = cargar_historico()
+import pandas as pd
 
-for nombre, df in [("estadisticas", est), ("comparacion", comp), ("proyeccion", proy), ("historico", hist)]:
-    reporte_calidad(df, nombre)
+from src import estadisticas, indicadores, visualizaciones
 
-proy = limpiar_proyeccion(proy)
-hist = limpiar_historico(hist)
+RAIZ = Path(__file__).resolve().parent
+DATASET = RAIZ / "datos" / "procesados" / "dataset_limpio.csv"
+SALIDA = RAIZ / "resultados"
 
-reporte_calidad(proy, "proyeccion (limpio)")
-reporte_calidad(hist, "historico (limpio)")
+COLUMNAS_REQUERIDAS = ["Región", "Temporada", "Causa", "Superficie quemada total [ha]"]
 
-os.makedirs("datos/procesados", exist_ok=True)
-hist.to_csv("datos/procesados/dataset_limpio.csv", index=False, encoding="utf-8-sig")
-proy.to_csv("datos/procesados/proyeccion_limpio.csv", index=False, encoding="utf-8-sig")
+
+def cargar_datos():
+    try:
+        return pd.read_csv(DATASET)
+    except UnicodeDecodeError:
+        return pd.read_csv(DATASET, encoding="latin-1")
+
+
+def main():
+    df = cargar_datos()
+    faltan = [c for c in COLUMNAS_REQUERIDAS if c not in df.columns]
+    if faltan:
+        raise SystemExit(f"Faltan columnas en el dataset: {faltan}\nColumnas disponibles: {list(df.columns)}")
+    print(f"Dataset cargado: {df.shape[0]} filas, {df.shape[1]} columnas")
+
+    tabla = estadisticas.calcular_estadisticas(df)
+    print("Estadísticas guardadas en", estadisticas.guardar_estadisticas(tabla, SALIDA / "estadisticas.csv"))
+
+    tabla_ind = indicadores.calcular_indicadores(df)
+    print("Indicadores guardados en", indicadores.guardar_indicadores(tabla_ind, SALIDA / "indicadores.csv"))
+    print(tabla_ind[["Indicador", "Resultado"]].to_string(index=False))
+
+    for ruta in visualizaciones.generar_graficos(df, SALIDA / "graficos"):
+        print("Gráfico guardado en", ruta)
+
+
+if __name__ == "__main__":
+    main()

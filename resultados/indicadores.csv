@@ -1,0 +1,8 @@
+﻿Indicador,Método de cálculo,Resultado,Interpretación
+Total de registros válidos,Conteo de incendios con 'Superficie quemada total [ha]' no nulo,5173,"De 5173 registros, 5173 tienen superficie quemada registrada y se usan en el análisis."
+Superficie quemada promedio por incendio [ha],Media de 'Superficie quemada total [ha]',3.22,"En promedio cada incendio quema 3.22 ha; la mediana es 0.20 ha, por lo que unos pocos incendios muy grandes elevan el promedio."
+Porcentaje de incendios mayores a 10 ha,(incendios con superficie > 10 ha / registros válidos) x 100,3.85,El 3.85% de los incendios supera las 10 ha; el resto son incendios pequeños.
+Cantidad de incendios críticos (>= 100 ha),Conteo de incendios con superficie >= 100 ha,29,"Hay 29 incendios de gran magnitud, que concentran la mayor parte del daño."
+Región con más incendios,Categoría más frecuente de 'Región',Biobío (2108 incendios),Biobío concentra el 40.8% de los incendios registrados.
+Causa más frecuente,Categoría más frecuente de 'Causa',Tránsito De Personasvehículos O Aeronaves (1749 incendios),La causa 'Tránsito De Personasvehículos O Aeronaves' explica el 33.8% de los incendios.
+Mayor incendio registrado,Valor máximo de 'Superficie quemada total [ha]' y su registro asociado,"1300.00 ha (Marchigue, O'Higgins, temporada 2005-2006)",Es el evento más extremo del período y sirve de referencia del peor escenario.
