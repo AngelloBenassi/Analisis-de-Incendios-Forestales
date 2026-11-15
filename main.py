@@ -9,7 +9,7 @@ RAIZ = Path(__file__).resolve().parent
 DATASET = RAIZ / "datos" / "procesados" / "dataset_limpio.csv"
 SALIDA = RAIZ / "resultados"
 
-COLUMNAS_REQUERIDAS = ["Región", "Temporada", "Causa", "Superficie quemada total [ha]"]
+COLUMNAS_REQUERIDAS = ["Región", "Fecha", "Causa", "Superficie quemada total [ha]"]
 
 
 def cargar_datos():

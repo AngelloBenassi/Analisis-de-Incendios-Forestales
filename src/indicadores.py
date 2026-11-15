@@ -7,6 +7,7 @@ COL_SUP = "Superficie quemada total [ha]"
 COL_REGION = "Región"
 COL_CAUSA = "Causa"
 COL_TEMPORADA = "Temporada"
+COL_FECHA = "Fecha"
 UMBRAL_GRANDE_HA = 10     # incendio "grande"
 UMBRAL_CRITICO_HA = 100   # incendio "crítico"
 
@@ -70,16 +71,26 @@ def calcular_indicadores(df):
             f"temporada {fila.get(COL_TEMPORADA, '-')})",
             "Es el evento más extremo del período y sirve de referencia del peor escenario.")
 
-    # 8. Variación entre períodos (última temporada vs anterior)
-    por_temp = df.groupby(COL_TEMPORADA)[COL_SUP].sum().sort_index()
-    if len(por_temp) >= 2 and por_temp.iloc[-2] != 0:
-        ult, ant = por_temp.iloc[-1], por_temp.iloc[-2]
-        var = (ult - ant) / ant * 100
-        agregar(f"Variación de superficie quemada entre temporadas ({por_temp.index[-2]} a {por_temp.index[-1]})",
-                "((superficie última temporada - superficie temporada anterior) / temporada anterior) x 100",
-                round(var, 2),
-                f"La superficie quemada {'aumentó' if var > 0 else 'disminuyó'} {abs(var):.2f}% "
-                "respecto de la temporada anterior (revisa si la última temporada está completa).")
+    # 8 y 9. Evolución mensual (el dataset cubre una sola temporada, por eso se compara por mes)
+    fechas = pd.to_datetime(df[COL_FECHA], errors="coerce")
+    mensual = df.assign(_mes=fechas.dt.to_period("M")).dropna(subset=["_mes"]).groupby("_mes")[COL_SUP].agg(["sum", "count"])
+    if len(mensual) >= 2:
+        mes_inc = mensual["count"].idxmax()
+        agregar("Mes con más incendios",
+                f"Mes con mayor conteo de incendios según '{COL_FECHA}'",
+                f"{mes_inc} ({int(mensual.loc[mes_inc, 'count'])} incendios)",
+                f"En {mes_inc} se concentra el {mensual.loc[mes_inc, 'count'] / mensual['count'].sum() * 100:.1f}% de los incendios.")
+        mes_pico = mensual["sum"].idxmax()
+        pos = list(mensual.index).index(mes_pico)
+        if pos > 0 and mensual["sum"].iloc[pos - 1] != 0:
+            ant = mensual["sum"].iloc[pos - 1]
+            var = (mensual["sum"].iloc[pos] - ant) / ant * 100
+            agregar(f"Variación de superficie quemada: mes pico ({mes_pico}) vs. mes anterior",
+                    "((superficie del mes pico - superficie del mes anterior) / mes anterior) x 100",
+                    round(var, 2),
+                    f"En el mes con más superficie quemada ({mes_pico}) la superficie fue {var:.2f}% "
+                    "mayor que en el mes anterior." if var > 0 else
+                    f"En {mes_pico} la superficie varió {var:.2f}% respecto del mes anterior.")
 
     return pd.DataFrame(filas)
 

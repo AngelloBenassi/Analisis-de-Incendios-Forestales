@@ -5,10 +5,11 @@ import matplotlib
 matplotlib.use("Agg")  # guarda archivos sin abrir ventanas
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 COL_SUP = "Superficie quemada total [ha]"
 COL_REGION = "Región"
-COL_TEMPORADA = "Temporada"
+COL_FECHA = "Fecha"
 
 
 def _guardar(fig, carpeta, nombre):
@@ -35,18 +36,19 @@ def grafico_incendios_por_region(df, carpeta):
     return _guardar(fig, carpeta, "incendios_por_region.png")
 
 
-def grafico_superficie_por_temporada(df, carpeta):
-    serie = df.groupby(COL_TEMPORADA)[COL_SUP].sum().sort_index()
+def grafico_evolucion_mensual(df, carpeta):
+    fechas = pd.to_datetime(df[COL_FECHA], errors="coerce")
+    serie = df.assign(_mes=fechas.dt.to_period("M")).dropna(subset=["_mes"]).groupby("_mes")[COL_SUP].sum()
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(serie.index.astype(str), serie.values, marker="o", color="#e67e22",
             label="Superficie quemada total")
-    ax.set_title("Evolución de la superficie quemada por temporada")
-    ax.set_xlabel("Temporada")
+    ax.set_title("Evolución mensual de la superficie quemada (temporada 2005-2006)")
+    ax.set_xlabel("Mes")
     ax.set_ylabel("Superficie quemada [ha]")
     ax.tick_params(axis="x", rotation=45)
     ax.grid(alpha=0.3)
     ax.legend()
-    return _guardar(fig, carpeta, "superficie_por_temporada.png")
+    return _guardar(fig, carpeta, "superficie_por_mes.png")
 
 
 def histograma_superficie(df, carpeta):
@@ -68,6 +70,6 @@ def histograma_superficie(df, carpeta):
 def generar_graficos(df, carpeta):
     return [
         grafico_incendios_por_region(df, carpeta),
-        grafico_superficie_por_temporada(df, carpeta),
+        grafico_evolucion_mensual(df, carpeta),
         histograma_superficie(df, carpeta),
     ]
