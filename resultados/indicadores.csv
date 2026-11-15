@@ -6,3 +6,5 @@ Cantidad de incendios críticos (>= 100 ha),Conteo de incendios con superficie >
 Región con más incendios,Categoría más frecuente de 'Región',Biobío (2108 incendios),Biobío concentra el 40.8% de los incendios registrados.
 Causa más frecuente,Categoría más frecuente de 'Causa',Tránsito De Personasvehículos O Aeronaves (1749 incendios),La causa 'Tránsito De Personasvehículos O Aeronaves' explica el 33.8% de los incendios.
 Mayor incendio registrado,Valor máximo de 'Superficie quemada total [ha]' y su registro asociado,"1300.00 ha (Marchigue, O'Higgins, temporada 2005-2006)",Es el evento más extremo del período y sirve de referencia del peor escenario.
+Mes con más incendios,Mes con mayor conteo de incendios según 'Fecha',2006-02 (1304 incendios),En 2006-02 se concentra el 25.2% de los incendios.
+Variación de superficie quemada: mes pico (2006-02) vs. mes anterior,((superficie del mes pico - superficie del mes anterior) / mes anterior) x 100,8.89,En el mes con más superficie quemada (2006-02) la superficie fue 8.89% mayor que en el mes anterior.
